@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Vulkan support scaffolding: `--features vulkan` builds a runtime probe
+  (`ash`) that enumerates compute-capable GPUs; `--device vulkan[:N]` is
+  accepted by the CLI (`XTTS_DEVICE=vulkan` too) and reports actionable
+  errors. Actual execution awaits a Candle Vulkan backend (candle-core 0.11
+  has none); `./build.sh --vulkan` / `./setup.sh --vulkan` wrap the feature.
+
 ## [0.1.0] - 2026-10-03
 
 First release: Coqui XTTS-v2 in Rust/Candle with GGUF weights.

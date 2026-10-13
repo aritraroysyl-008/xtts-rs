@@ -59,6 +59,11 @@ Each feature maps to code and tests in [spec/matrix.md](spec/matrix.md).
   are not supported.
 - CPU synthesis is ~0.4x real time: fine offline, too slow to stream.
 - One synthesis at a time per server process.
+- Vulkan (`--device vulkan`) is a device probe only: candle-core 0.11 has no
+  Vulkan backend (it was dropped upstream in favour of the `ug` layer, which
+  ships CUDA and Metal), so the build needs `--features vulkan` and a Candle
+  fork exposing `Device::new_vulkan` before it runs on a Vulkan GPU. Until
+  then use `cuda`, `metal` or `cpu`.
 
 ## Installation
 
@@ -79,7 +84,8 @@ x86_64 (CPU). Tested on Linux x86_64 with an RTX 4090.
 ./prereq.sh            # check / install the toolchain (CHECK_ONLY=1: check only)
 ./setup.sh --cuda      # fetch dependencies and compile-check (idempotent)
 ./build.sh --cuda      # release binary → build/xtts-<os>-<arch>-cuda-<version>
-                       # ./build.sh for CPU, ./build.sh --metal for Apple GPUs
+                       # ./build.sh for CPU, ./build.sh --metal for Apple GPUs,
+                       # ./build.sh --vulkan for the Vulkan probe (see limitations)
 ```
 
 ### Model
@@ -133,7 +139,7 @@ options.
 | Option / variable | Role | Default |
 |---|---|---|
 | `-m, --model`, `XTTS_MODEL` | GGUF file or Coqui checkpoint directory | — |
-| `--device`, `XTTS_DEVICE` | `auto` (CUDA if available), `cpu`, `cuda`, `cuda:N`, `metal` | `auto` |
+| `--device`, `XTTS_DEVICE` | `auto` (CUDA if available), `cpu`, `cuda`, `cuda:N`, `metal`, `vulkan`, `vulkan:N` (see note below) | `auto` |
 | `--threads`, `XTTS_THREADS` | CPU threads | all cores |
 | `--voice`, `XTTS_VOICE` (serve) | Default voice | `Claribel Dervla` |
 | `--lang`, `XTTS_LANG` (serve) | Default language | `en` |

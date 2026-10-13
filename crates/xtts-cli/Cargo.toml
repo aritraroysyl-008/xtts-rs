@@ -14,6 +14,8 @@ path = "src/main.rs"
 default = []
 cuda = ["xtts/cuda", "candle-core/cuda"]
 metal = ["xtts/metal", "candle-core/metal"]
+# Vulkan GPU backend (probe only for now — see crates/xtts/src/vulkan.rs).
+vulkan = ["xtts/vulkan"]
 
 [dependencies]
 xtts = { path = "../xtts" }

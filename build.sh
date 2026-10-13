@@ -6,6 +6,8 @@
 #   ./build.sh            CPU
 #   ./build.sh --cuda     NVIDIA GPU (needs nvcc; CUDA_COMPUTE_CAP=89 for an RTX 40xx, 80 A100, 90 H100)
 #   ./build.sh --metal    Apple GPU
+#   ./build.sh --vulkan   Vulkan GPU probe (needs libvulkan; note: candle-core
+#                         has no Vulkan backend yet — see crates/xtts/src/vulkan.rs)
 #
 # Non-interactive (CI friendly); writes only to target/ (target-cuda/ for
 # --cuda) and build/.
@@ -23,8 +25,9 @@ case "${1:-}" in
     fi
     FEATURES=(--features cuda); SUFFIX=cuda; TARGET_DIR=target-cuda ;;
   --metal) FEATURES=(--features metal); SUFFIX=metal ;;
+  --vulkan) FEATURES=(--features vulkan); SUFFIX=vulkan ;;
   "") ;;
-  *) echo "unknown option: $1 (--cuda, --metal)" >&2; exit 1 ;;
+  *) echo "unknown option: $1 (--cuda, --metal, --vulkan)" >&2; exit 1 ;;
 esac
 VERSION=$(grep -m1 '^version' Cargo.toml | cut -d'"' -f2)
 cargo build --release --locked -p xtts-cli --target-dir "$TARGET_DIR" "${FEATURES[@]}"

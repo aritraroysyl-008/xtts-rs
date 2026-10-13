@@ -12,6 +12,10 @@ categories.workspace = true
 default = []
 cuda = ["candle-core/cuda", "candle-nn/cuda", "dep:cudarc"]
 metal = ["candle-core/metal", "candle-nn/metal"]
+# Vulkan GPU backend. candle-core 0.11 has no Vulkan Device variant yet, so
+# this feature only compiles the runtime probe; enable it once a Candle build
+# with Vulkan support (feature `vulkan`) is used as the workspace dependency.
+vulkan = ["dep:ash"]
 
 [dependencies]
 candle-core.workspace = true
@@ -26,5 +30,7 @@ rand.workspace = true
 regex = "1"
 # Same version as candle-core's, for trimming the CUDA memory pool.
 cudarc = { version = "0.19.8", optional = true, default-features = false, features = ["std", "driver", "cuda-version-from-build-system"] }
+# Vulkan runtime probe (see src/vulkan.rs); used once Candle gains a Vulkan device.
+ash = { version = "0.38", optional = true, default-features = false, features = ["loaded"] }
 zip = { version = "8", default-features = false }
 tn = { git = "https://github.com/rzafiamy/tn-rs", tag = "v0.3.0" }
