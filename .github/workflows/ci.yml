@@ -32,6 +32,8 @@ jobs:
             features: ""
           - os: macos-latest
             features: "--features xtts-cli/metal"
+          - os: ubuntu-latest
+            features: "--features xtts-cli/vulkan"
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@1.97.1

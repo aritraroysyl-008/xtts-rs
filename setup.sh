@@ -4,13 +4,15 @@
 #
 #   ./setup.sh            CPU
 #   ./setup.sh --cuda     with NVIDIA GPU support
+#   ./setup.sh --vulkan   with the Vulkan device probe (see crates/xtts/src/vulkan.rs)
 set -euo pipefail
 cd "$(dirname "$0")"
 FEATURES=()
 case "${1:-}" in
   --cuda) FEATURES=(--features xtts-cli/cuda) ;;
+  --vulkan) FEATURES=(--features xtts-cli/vulkan) ;;
   "") ;;
-  *) echo "unknown option: $1 (--cuda)" >&2; exit 1 ;;
+  *) echo "unknown option: $1 (--cuda, --vulkan)" >&2; exit 1 ;;
 esac
 
 ./prereq.sh

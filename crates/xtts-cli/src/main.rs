@@ -22,7 +22,8 @@ pub struct ModelArgs {
     /// Model: a .gguf file or a Coqui checkpoint directory.
     #[arg(short, long, env = "XTTS_MODEL")]
     model: PathBuf,
-    /// Device: cpu, cuda, cuda:N, metal (default: cuda if available).
+    /// Device: cpu, cuda, cuda:N, metal, vulkan, vulkan:N (default: cuda if
+    /// available).
     #[arg(long, default_value = "auto", env = "XTTS_DEVICE")]
     device: String,
     /// CPU threads (default: all cores).
@@ -157,9 +158,11 @@ pub fn load_model(args: &ModelArgs) -> Result<Xtts> {
         "cpu" => Device::Cpu,
         "cuda" => Device::new_cuda(0)?,
         "metal" => Device::new_metal(0)?,
-        d => match d.strip_prefix("cuda:") {
-            Some(n) => Device::new_cuda(n.parse().context("cuda:N")?)?,
-            None => anyhow::bail!("unknown device '{d}'"),
+        "vulkan" => xtts::vulkan::connect(0)?,
+        d => match (d.strip_prefix("cuda:"), d.strip_prefix("vulkan:")) {
+            (Some(n), _) => Device::new_cuda(n.parse().context("cuda:N")?)?,
+            (_, Some(n)) => xtts::vulkan::connect(n.parse().context("vulkan:N")?)?,
+            _ => anyhow::bail!("unknown device '{d}'"),
         },
     };
     let dtype = match args.dtype.as_deref() {

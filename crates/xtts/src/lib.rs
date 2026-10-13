@@ -8,6 +8,7 @@ pub mod model;
 pub mod sampling;
 pub mod text;
 mod text_tables;
+pub mod vulkan;
 pub mod weights;
 
 pub use model::{Codes, StreamOptions, SynthOptions, Voice, Xtts};
